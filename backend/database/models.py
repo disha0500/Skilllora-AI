@@ -154,3 +154,16 @@ class BiasAuditLog(Base):
     mitigation_notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+
+class UserAccount(Base):
+    __tablename__ = "user_accounts"
+
+    id = Column(String(50), primary_key=True)
+    email = Column(String(100), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    full_name = Column(String(100), nullable=False)
+    role = Column(String(30), default="candidate")  # candidate, recruiter, admin
+    organization = Column(String(100), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+

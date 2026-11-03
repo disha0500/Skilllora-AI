@@ -15,6 +15,7 @@ from database.models import (
     JobPosting,
     CourseResource,
     BiasAuditLog,
+    UserAccount,
     SkillValidationStatus,
     SkillCategory,
 )
@@ -229,6 +230,37 @@ def init_db():
                     suggested_followup_tasks="Present this experience within an Agile Scrum Retrospective format."
                 )
                 session.add(evidence_2)
+
+        # Seed Default User Accounts for Candidate, Recruiter, and Admin
+        if session.query(UserAccount).count() == 0:
+            demo_users = [
+                UserAccount(
+                    id="usr_ayesha_khan",
+                    email="ayesha.khan@example.com",
+                    password_hash="password123",  # Demo credential
+                    full_name="Ayesha Khan",
+                    role="candidate",
+                    organization="Workforce Returnee Cohort",
+                ),
+                UserAccount(
+                    id="usr_rajesh_sharma",
+                    email="recruiter@sap.com",
+                    password_hash="password123",
+                    full_name="Rajesh Sharma",
+                    role="recruiter",
+                    organization="SAP Labs India",
+                ),
+                UserAccount(
+                    id="usr_neha_verma",
+                    email="admin@skillbridge.ai",
+                    password_hash="password123",
+                    full_name="Dr. Neha Verma",
+                    role="admin",
+                    organization="Inclusive Workforce Council",
+                ),
+            ]
+            for u in demo_users:
+                session.add(u)
 
         session.commit()
     except Exception as e:

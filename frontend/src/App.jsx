@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AuthModal from './components/AuthModal';
 
 const API_BASE = 'http://localhost:8000/api';
 
@@ -7,6 +8,25 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [pipelineData, setPipelineData] = useState(null);
   const [serverOnline, setServerOnline] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('skillbridge_user');
+      return saved ? JSON.parse(saved) : {
+        full_name: 'Ayesha Khan',
+        email: 'ayesha.khan@example.com',
+        role: 'candidate',
+        organization: 'Workforce Returnee Cohort'
+      };
+    } catch {
+      return {
+        full_name: 'Ayesha Khan',
+        email: 'ayesha.khan@example.com',
+        role: 'candidate',
+        organization: 'Workforce Returnee Cohort'
+      };
+    }
+  });
 
   // Evidence Form State
   const [evidenceSkill, setEvidenceSkill] = useState('Planning and coordination');
@@ -416,6 +436,57 @@ export default function App() {
             >
               📄 Swagger API Docs
             </a>
+
+            {/* Authentication User Pill / Login Trigger */}
+            {currentUser ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', backgroundColor: '#f8fafc', padding: '0.35rem 0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: currentUser.role === 'recruiter' ? '#f59e0b' : currentUser.role === 'admin' ? '#10b981' : '#0070f2', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.75rem' }}>
+                  {currentUser.full_name?.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() || 'U'}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.1 }}>{currentUser.full_name}</span>
+                  <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'capitalize' }}>{currentUser.role}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsAuthOpen(true)}
+                  style={{
+                    marginLeft: '0.3rem',
+                    background: 'none',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.45rem',
+                    fontSize: '0.7rem',
+                    color: '#475569',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                  }}
+                  title="Switch user account or log out"
+                >
+                  Switch
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsAuthOpen(true)}
+                style={{
+                  backgroundColor: '#ffffff',
+                  color: '#0070f2',
+                  border: '1.5px solid #0070f2',
+                  borderRadius: '8px',
+                  padding: '0.6rem 1rem',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
+              >
+                👤 Sign In / Register
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -1016,6 +1087,25 @@ export default function App() {
           Aligning with <strong>SAP Learning</strong>, <strong>SAP SuccessFactors</strong>, and <strong>SAP BTP</strong>.
         </p>
       </footer>
+
+      {/* Login & Sign Up Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+          localStorage.setItem('skillbridge_user', JSON.stringify(user));
+          if (user.role === 'recruiter') {
+            setActiveTab('recruiter');
+            handleFetchRecruiterCandidates('job_001');
+          } else if (user.role === 'admin') {
+            setActiveTab('governance');
+          } else {
+            setActiveTab('overview');
+            loadAyeshaKhanDemo();
+          }
+        }}
+      />
     </div>
   );
 }

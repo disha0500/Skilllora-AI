@@ -20,6 +20,7 @@ from database.models import (
     JobPosting,
     CourseResource,
     BiasAuditLog,
+    UserAccount,
     SkillValidationStatus,
     SkillCategory,
 )
@@ -60,6 +61,25 @@ def on_startup():
 # ---------------------------------------------------------------------------
 # Pydantic Schemas
 # ---------------------------------------------------------------------------
+class SignupRequest(BaseModel):
+    email: str = Field(..., example="ayesha.khan@example.com")
+    password: str = Field(..., example="password123")
+    full_name: str = Field(..., example="Ayesha Khan")
+    role: str = Field("candidate", example="candidate")  # candidate, recruiter, admin
+    organization: Optional[str] = Field(None, example="SAP Workforce Returnee")
+    # Optional Candidate fields
+    previous_role: Optional[str] = Field("HR Operations Associate")
+    target_role: Optional[str] = Field("Project Coordinator")
+    has_career_break: Optional[bool] = Field(True)
+    career_break_years: Optional[float] = Field(3.0)
+    location: Optional[str] = Field("Lucknow, India")
+
+
+class LoginRequest(BaseModel):
+    email: str = Field(..., example="ayesha.khan@example.com")
+    password: str = Field(..., example="password123")
+
+
 class CandidateProfileRequest(BaseModel):
     name: str = Field(..., example="Ayesha Khan")
     email: str = Field(..., example="ayesha.khan@example.com")
@@ -155,6 +175,159 @@ def health_check():
         ],
         "docs_url": "/docs"
     }
+
+
+# ---------------------------------------------------------------------------
+# 0. Authentication & User Management Endpoints
+# ---------------------------------------------------------------------------
+@app.post("/api/auth/signup")
+def signup(payload: SignupRequest, db: Session = Depends(get_db)):
+    """Register a new user account with role-based profile creation."""
+    existing = db.query(UserAccount).filter(UserAccount.email == payload.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="An account with this email already exists.")
+
+    user_id = f"usr_{uuid.uuid4().hex[:8]}"
+    new_user = UserAccount(
+        id=user_id,
+        email=payload.email,
+        password_hash=payload.password,  # In production, use bcrypt hash
+        full_name=payload.full_name,
+        role=payload.role.lower(),
+        organization=payload.organization or "SkillBridge Workforce",
+    )
+    db.add(new_user)
+
+    # If registering as a candidate, also initialize candidate profile
+    cand_id = None
+    if payload.role.lower() == "candidate":
+        cand_id = f"cand_{uuid.uuid4().hex[:8]}"
+        new_cand = Candidate(
+            id=cand_id,
+            name=payload.full_name,
+            email=payload.email,
+            location=payload.location or "Remote, India",
+            current_or_previous_role=payload.previous_role or "Professional Associate",
+            target_role=payload.target_role or "Project Coordinator",
+            total_years_experience=2.0,
+            has_career_break=payload.has_career_break or False,
+            career_break_years=payload.career_break_years or 0.0,
+            career_break_reason="Career pause / family caregiving; ready to rejoin workforce",
+            bio=f"{payload.full_name} profile on SkillBridge AI."
+        )
+        db.add(new_cand)
+
+    db.commit()
+    db.refresh(new_user)
+
+    return {
+        "message": "User registered successfully.",
+        "user": {
+            "id": new_user.id,
+            "email": new_user.email,
+            "full_name": new_user.full_name,
+            "role": new_user.role,
+            "organization": new_user.organization,
+            "candidate_id": cand_id,
+            "token": f"jwt_{uuid.uuid4().hex[:16]}"
+        }
+    }
+
+
+@app.post("/api/auth/login")
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    """Authenticate user with email and password."""
+    user = db.query(UserAccount).filter(UserAccount.email == payload.email).first()
+    if not user:
+        # Fallback for default demo accounts if not yet in DB
+        if payload.email == "ayesha.khan@example.com" and payload.password == "password123":
+            return {
+                "message": "Login successful (demo mode).",
+                "user": {
+                    "id": "usr_ayesha_khan",
+                    "email": "ayesha.khan@example.com",
+                    "full_name": "Ayesha Khan",
+                    "role": "candidate",
+                    "organization": "Workforce Returnee Cohort",
+                    "candidate_id": "cand_ayesha_khan",
+                    "token": f"jwt_{uuid.uuid4().hex[:16]}"
+                }
+            }
+        elif payload.email == "recruiter@sap.com" and payload.password == "password123":
+            return {
+                "message": "Login successful (demo mode).",
+                "user": {
+                    "id": "usr_rajesh_sharma",
+                    "email": "recruiter@sap.com",
+                    "full_name": "Rajesh Sharma",
+                    "role": "recruiter",
+                    "organization": "SAP Labs India",
+                    "token": f"jwt_{uuid.uuid4().hex[:16]}"
+                }
+            }
+        elif payload.email == "admin@skillbridge.ai" and payload.password == "password123":
+            return {
+                "message": "Login successful (demo mode).",
+                "user": {
+                    "id": "usr_neha_verma",
+                    "email": "admin@skillbridge.ai",
+                    "full_name": "Dr. Neha Verma",
+                    "role": "admin",
+                    "organization": "Inclusive Workforce Council",
+                    "token": f"jwt_{uuid.uuid4().hex[:16]}"
+                }
+            }
+        raise HTTPException(status_code=401, detail="Invalid email or password.")
+
+    if user.password_hash != payload.password:
+        raise HTTPException(status_code=401, detail="Invalid password.")
+
+    cand = db.query(Candidate).filter(Candidate.email == user.email).first()
+
+    return {
+        "message": "Login successful.",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role,
+            "organization": user.organization,
+            "candidate_id": cand.id if cand else ("cand_ayesha_khan" if user.email == "ayesha.khan@example.com" else None),
+            "token": f"jwt_{uuid.uuid4().hex[:16]}"
+        }
+    }
+
+
+@app.get("/api/auth/demo-users")
+def get_demo_users():
+    """Retrieve pre-configured demo logins for 1-click hackfest evaluation."""
+    return [
+        {
+            "role": "candidate",
+            "role_title": "Candidate (Returnee)",
+            "name": "Ayesha Khan",
+            "email": "ayesha.khan@example.com",
+            "password": "password123",
+            "description": "2 yrs in HR Ops, 3 yrs career break, targeting Project Coordinator."
+        },
+        {
+            "role": "recruiter",
+            "role_title": "Recruiter (Talent Lead)",
+            "name": "Rajesh Sharma",
+            "email": "recruiter@sap.com",
+            "password": "password123",
+            "description": "SAP Labs Talent Acquisition reviewing inclusive applicant pools."
+        },
+        {
+            "role": "admin",
+            "role_title": "Admin (Auditor)",
+            "name": "Dr. Neha Verma",
+            "email": "admin@skillbridge.ai",
+            "password": "password123",
+            "description": "Workforce inclusion officer auditing fairness & compliance."
+        }
+    ]
+
 
 
 # ---------------------------------------------------------------------------

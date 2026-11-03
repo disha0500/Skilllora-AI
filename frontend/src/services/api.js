@@ -10,6 +10,11 @@ export const apiClient = axios.create({
 });
 
 export const careerService = {
+  // Auth & Accounts
+  login: (credentials) => apiClient.post('/auth/login', credentials),
+  signup: (userData) => apiClient.post('/auth/signup', userData),
+  getDemoUsers: () => apiClient.get('/auth/demo-users'),
+
   // Demo Persona
   getAyeshaDemo: () => apiClient.get('/demo/ayesha-khan'),
   resetAyeshaDemo: () => apiClient.post('/demo/ayesha-khan/reset'),
