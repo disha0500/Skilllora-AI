@@ -1,0 +1,120 @@
+[
+  {
+    "id": "job_001",
+    "title": "Project Coordinator",
+    "company": "SAP Enterprise Cloud Solutions",
+    "department": "Workforce Delivery",
+    "location": "Bangalore / Hybrid (Remote-Friendly)",
+    "experience_level": "Entry-to-Mid",
+    "min_years_exp": 1,
+    "career_break_friendly": true,
+    "required_skills": [
+      "Planning and coordination",
+      "Communication",
+      "Stakeholder management",
+      "Documentation",
+      "Task management"
+    ],
+    "preferred_skills": [
+      "Agile/Scrum",
+      "JIRA",
+      "SAP Project Systems",
+      "Problem solving"
+    ],
+    "transferable_acceptable_skills": {
+      "Interview scheduling": "Planning and coordination",
+      "Communicating with candidates": "Communication",
+      "Coordinating with hiring managers": "Stakeholder management",
+      "Maintaining employee records": "Documentation",
+      "Managing scheduling conflicts": "Problem solving",
+      "Following up on pending activities": "Task management"
+    },
+    "salary_range": "₹8,50,000 - ₹12,00,000",
+    "description": "Coordinate project sprints, cross-team communication, and milestone tracking. We value demonstrated transferable potential and welcome candidates returning from career breaks or non-traditional backgrounds.",
+    "posted_date": "2026-10-25"
+  },
+  {
+    "id": "job_002",
+    "title": "Operations & Delivery Associate",
+    "company": "Cognitive Nexus Tech",
+    "department": "Global Operations",
+    "location": "Lucknow / Remote",
+    "experience_level": "Mid-Level",
+    "min_years_exp": 2,
+    "career_break_friendly": true,
+    "required_skills": [
+      "Task management",
+      "Stakeholder management",
+      "Documentation",
+      "Process optimization"
+    ],
+    "preferred_skills": [
+      "Spreadsheets (Excel/Sheets)",
+      "Conflict resolution",
+      "Client reporting"
+    ],
+    "transferable_acceptable_skills": {
+      "HR operations": "Process optimization",
+      "Vendor coordination": "Stakeholder management",
+      "Records maintenance": "Documentation"
+    },
+    "salary_range": "₹7,00,000 - ₹10,50,000",
+    "description": "Drive daily operational cadence, cross-functional status reporting, and workflow optimization across delivery teams.",
+    "posted_date": "2026-10-28"
+  },
+  {
+    "id": "job_003",
+    "title": "Associate Business Analyst",
+    "company": "Pulse Workforce Systems",
+    "department": "Digital Transformation",
+    "location": "Gurgaon / Hybrid",
+    "experience_level": "Entry-to-Mid",
+    "min_years_exp": 1,
+    "career_break_friendly": true,
+    "required_skills": [
+      "Requirements gathering",
+      "Communication",
+      "Documentation",
+      "Problem solving"
+    ],
+    "preferred_skills": [
+      "SQL",
+      "Data visualization",
+      "SAP S/4HANA Overview"
+    ],
+    "transferable_acceptable_skills": {
+      "Employee feedback analysis": "Requirements gathering",
+      "Policy documentation": "Documentation"
+    },
+    "salary_range": "₹9,00,000 - ₹13,00,000",
+    "description": "Translate business stakeholder requirements into technical specifications, assist sprint planning, and participate in user acceptance testing.",
+    "posted_date": "2026-10-29"
+  },
+  {
+    "id": "job_004",
+    "title": "Full Stack AI Engineer",
+    "company": "TechNova Innovations",
+    "department": "AI Labs",
+    "location": "Remote, India",
+    "experience_level": "Mid-Senior",
+    "min_years_exp": 3,
+    "career_break_friendly": false,
+    "required_skills": [
+      "Python",
+      "FastAPI",
+      "React",
+      "TypeScript",
+      "LangChain",
+      "PostgreSQL"
+    ],
+    "preferred_skills": [
+      "Docker",
+      "Vector Databases",
+      "Prompt Engineering"
+    ],
+    "transferable_acceptable_skills": {},
+    "salary_range": "₹18,00,000 - ₹28,00,000",
+    "description": "Architect and deploy generative AI applications, integrating multi-agent LLM systems with modern reactive web interfaces.",
+    "posted_date": "2026-10-15"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "course_sap_001",
+    "title": "Discovering SAP Business Technology Platform (SAP BTP)",
+    "provider": "SAP Learning",
+    "is_sap_official": true,
+    "skills_covered": ["SAP BTP", "Cloud Integration", "Enterprise Architecture"],
+    "level": "Beginner",
+    "duration_hours": 12,
+    "rating": 4.9,
+    "url": "https://learning.sap.com/learning-journeys/discover-sap-business-technology-platform",
+    "description": "Official SAP learning journey covering cloud development, integrations, and enterprise business services on SAP BTP."
+  },
+  {
+    "id": "course_sap_002",
+    "title": "Project Management in the SAP Ecosystem & Agile Delivery",
+    "provider": "SAP Learning",
+    "is_sap_official": true,
+    "skills_covered": ["Planning and coordination", "Agile/Scrum", "SAP Project Systems", "Stakeholder management"],
+    "level": "Intermediate",
+    "duration_hours": 18,
+    "rating": 4.9,
+    "url": "https://learning.sap.com/learning-journeys/manage-projects-with-sap-activate",
+    "description": "Learn project coordination fundamentals using SAP Activate methodology, agile sprint cadences, and stakeholder sign-offs."
+  },
+  {
+    "id": "course_sap_003",
+    "title": "Exploring SAP SuccessFactors for Modern Workforce Management",
+    "provider": "SAP Learning",
+    "is_sap_official": true,
+    "skills_covered": ["HR operations", "Workforce Analytics", "Task management", "Documentation"],
+    "level": "Beginner",
+    "duration_hours": 15,
+    "rating": 4.8,
+    "url": "https://learning.sap.com/learning-journeys/explore-sap-successfactors",
+    "description": "Gain practical mastery of enterprise human experience management, internal talent mobility, and employee lifecycle data."
+  },
+  {
+    "id": "course_004",
+    "title": "JIRA & Confluence for Agile Project Coordinators",
+    "provider": "Atlassian University",
+    "is_sap_official": false,
+    "skills_covered": ["JIRA", "Task management", "Planning and coordination", "Agile/Scrum"],
+    "level": "Beginner",
+    "duration_hours": 8,
+    "rating": 4.8,
+    "url": "https://www.atlassian.com/university",
+    "description": "Practical hands-on training to configure sprint boards, maintain backlogs, track blockers, and automate status reports."
+  },
+  {
+    "id": "course_005",
+    "title": "Executive Communication & Cross-Functional Stakeholder Alignment",
+    "provider": "Project Management Institute (PMI)",
+    "is_sap_official": false,
+    "skills_covered": ["Communication", "Stakeholder management", "Problem solving"],
+    "level": "Intermediate",
+    "duration_hours": 10,
+    "rating": 4.7,
+    "url": "https://www.pmi.org/learning",
+    "description": "Techniques for conflict resolution, executive briefings, risk mitigation communication, and cross-team alignment."
+  },
+  {
+    "id": "course_006",
+    "title": "Full Stack AI Agents & Multi-Agent Orchestration",
+    "provider": "DeepDev Academy",
+    "is_sap_official": false,
+    "skills_covered": ["Python", "LangChain", "FastAPI", "Prompt Engineering"],
+    "level": "Advanced",
+    "duration_hours": 32,
+    "rating": 4.9,
+    "url": "https://example.com/courses/llm-agents",
+    "description": "Deep dive into building multi-agent systems with tool use, memory guardrails, and audit loops."
+  }
+]
